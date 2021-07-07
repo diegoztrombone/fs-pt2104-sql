@@ -221,19 +221,21 @@ WHERE l.gender LIKE 'female'
 
 -- 28. Devuelve el `known_name`, edad en la que fue premiado y el premio de los 5 laureados más jóvenes al momento de ser condecorado y cuyos premios sean los más altos.
 
-SELECT l.known_name, DATE_PART('year', TO_DATE(n.award_year::text, 'YYYY')) - DATE_PART('year', l.birth_date) AS age, n.prize_amount   
+SELECT l.known_name, DATE_PART('year', TO_DATE(n.award_year::text, 'YYYY')) - DATE_PART('year', l.birth_date) AS awared_age, n.prize_amount   
 FROM nobels AS n
 INNER JOIN laureates AS l
 ON n.laureate_id = l.id
-ORDER BY n.prize_amount DESC, age ASC 
+ORDER BY n.prize_amount DESC, awared_age ASC
+LIMIT 5 
 
 -- 29. Devuelve el `known_name` y el premio de los 5 laureados más jóvenes y cuyos premios sean los más altos.
 
-SELECT l.known_name, n.prize_amount, DATE_PART('year', TO_DATE(n.award_year::text, 'YYYY')) - DATE_PART('year', l.birth_date) AS age
+SELECT l.known_name, n.prize_amount, DATE_PART('year', TO_DATE(n.award_year::text, 'YYYY')) - DATE_PART('year', l.birth_date) AS awared_age
 FROM nobels AS n
 INNER JOIN laureates AS l
 ON n.laureate_id = l.id
-ORDER BY n.prize_amount DESC, age ASC 
+ORDER BY n.prize_amount DESC, awared_age ASC 
+LIMIT 5
 
 -- 30. Devuelve el nombre completo, la motivación y el premio de aquellos laureados que no tienen ninguna afiliación.
 
@@ -256,9 +258,45 @@ AND l.death_date IS NOT NULL
 
 -- 32. Devuelve el `known_name`, fecha de muerte, categoría y total de años que hace que murieron aquellos que ganaron el Nobel de Química.
 
+SELECT l.known_name, l.death_date, n.category, DATE_PART('year', NOW()) - DATE_PART('year', l.death_date) AS death_time
+FROM nobels AS n
+INNER JOIN laureates AS l
+ON n.laureate_id = l.id
+WHERE l.death_date IS NOT NULL
+AND n.category LIKE 'Chemistry'
+ORDER BY l.death_date DESC
+
+
+
 -- 33. Devuelve `known_name`, `category_fullname` y edad actual de los 5 Nobel cuyo `known_name`sean los más cortos, ordenados desde el más joven hasta el más viejo.
+
+SELECT l.known_name, n.category_fullname, DATE_PART('year', NOW()) - DATE_PART('year', l.birth_date) AS age
+FROM nobels AS n
+INNER JOIN laureates AS l
+ON n.laureate_id = l.id
+ORDER BY CHAR_LENGTH(l.known_name) ASC, age ASC
+LIMIT 5
+
+
 
 -- 34. Devuelve `known_name`, la edad actual solo en años, la edad de cuando recibió el Nobel y la categoría del Nobel de aquellos laureados que tengan más de 80 años y aún sigan vivos.
 
+SELECT l.known_name, DATE_PART('year', NOW()) - DATE_PART('year', l.birth_date) AS age, DATE_PART('year', TO_DATE(n.award_year::text, 'YYYY')) - DATE_PART('year', l.birth_date) AS award_age, n.category
+FROM nobels AS n
+INNER JOIN laureates AS l
+ON n.laureate_id = l.id
+WHERE death_date IS NULL
+GROUP BY l.known_name, n.award_year, l.birth_date, n.category
+HAVING DATE_PART('year', NOW()) - DATE_PART('year', l.birth_date) > 80
+ORDER BY age ASC
+
+
+
+
+
 -- 35. Devuelve el nombre de la categoría y la suma total de los premios recibidos por categoría ordenados alfabéticamente.
-                                                                                                                                                                              
+SELECT category, SUM(prize_amount) AS award_sum
+FROM nobels 
+GROUP BY category
+                                                                                                                                                              
+                                                                                                                                                                 
