@@ -5,6 +5,8 @@ const app = express()
 
 // Don't forget middleware to parse json body!
 
+app.use(express.json())
+
 // Main route passing db configuration as argument because THAT 'require' returns a function
 app.use('/', require('./services')(db))
 
@@ -15,6 +17,7 @@ app.use((_, __, next) => {
 
 // Middleware to manage errors
 app.use((error, _, res, __) => {
+  console.log(">>>>", error.message)
   res.status(400).json({
     status: false,
     message: error.message

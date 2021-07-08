@@ -10,7 +10,7 @@
     "db:insert": "node scripts/insertions.js",
     "db:up": "npm run db:create && npm run db:insert",
     "db:drop": "node scripts/drops.js",
-    "docker:up": "docker-compose up",
+    "docker:up": "sudo docker-compose up",
     "docker:down": "docker-compose down",
     "docker:purge": "npm run docker:down && docker rmi -f $(docker images -a -q)",
     "docker:stats": "docker stats",
