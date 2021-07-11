@@ -18,7 +18,7 @@ Apóyate en los ejercicios anteriormente creados en clase para ir siguiendo el e
 
 ## Ejercicios
 
-1. Haz un endpoint para obtener todos los pokemons (incluye los tipos también. Devuelve el id del pokémon, el nombre y los tipos que tiene en un array)
+1. Haz un endpoint para obtener todos los pokemons (incluye los tipos también. Devuelve el id del pokémon, el nombre y los tipos que tiene en un array) OK!
 ```js
 // GET http://localhost:3000/pokemons
 ```
@@ -35,7 +35,7 @@ Apóyate en los ejercicios anteriormente creados en clase para ir siguiendo el e
   }
 ```
 
-2. Haz un endpoint para obtener `name`, `badge`, `description` y `city` (de `gyms`) de todos los entrenadores
+2. Haz un endpoint para obtener `name`, `badge`, `description` y `city` (de `gyms`) de todos los entrenadores OK
 ```js
 // GET http://localhost:3000/trainers
 ```

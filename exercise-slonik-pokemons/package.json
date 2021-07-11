@@ -1,0 +1,21 @@
+{
+  "name": "exercise-slonik-pokemons",
+  "version": "1.0.0",
+  "description": "1. Comprueba que tienes corriendo los contenedores de `postgres` y `adminer` a través de `docker-compose`",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "slonik": "^23.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.10"
+  }
+}
