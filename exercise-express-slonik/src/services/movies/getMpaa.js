@@ -1,8 +1,8 @@
-const { getNationality } = require('../../queries/directors')
+const { getMpaa } = require('../../queries/movies')
 
 module.exports = db => async (req, res, next) => {
-  const { nationality1, nationality2 } = req.query
-  const result = await getNationality(db)(nationality1, nationality2)
+
+  const result = await getMpaa(db)
 
   if (result === false) {
     return next(new Error('No hay datos'))

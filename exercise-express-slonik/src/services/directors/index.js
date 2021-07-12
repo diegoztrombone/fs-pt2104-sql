@@ -6,6 +6,7 @@ module.exports = db => {
   router.get('/getPicAndNickname', require('./getPicAndNickname')(db))
   router.get('/getNationality', require('./getNationality')(db))
   router.get('/getByRol', require('./getByRol')(db))
+  router.get('/getComas', require('./getComas')(db))
 
   return router
 }

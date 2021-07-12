@@ -17,7 +17,7 @@ app.use((_, __, next) => {
 
 // Middleware to manage errors
 app.use((error, _, res, __) => {
-  console.log(">>>>", error.message)
+  console.log(">>>>", error)
   res.status(400).json({
     status: false,
     message: error.message
