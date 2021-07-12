@@ -51,7 +51,7 @@ Apóyate en los ejercicios anteriormente creados en clase para ir siguiendo el e
 ```
 
 5. Modifica el primer endpoint para que acepte query params de la siguiente manera
-```js
+```js OK
 // GET http://localhost:3000/pokemons?type1=grass
 // GET http://localhost:3000/pokemons?type1=grass&type2=poison
 ```

@@ -1,24 +1,38 @@
 const { sql } = require('slonik')
 
-const getPokemons = db => async (data1, data2) => {
-
-    const search = `%${data1}%`
-    console.log(search)
+const getPokemons = db => async (data1 = '', data2 = '') => {
     try {
+        if (!data1 && !data2) {
+            const result = await db.query(sql`
+            SELECT p.id , p.name, json_agg(e.name) AS types
+            FROM pokemons AS p
+            INNER JOIN pokemons_elements AS pe
+            ON p.id = pe.pokemon_id
+            INNER JOIN elements AS e
+            ON pe.element_id = e.id
+            GROUP BY p.id, p.name
+            ORDER BY p.id ASC
+          `)
+            return result.rows
+        }
+        console.log("entra")
         const result = await db.query(sql`
-        SELECT p.id , p.name, json_agg(e.name) AS types
-        FROM pokemons AS p
-        INNER JOIN pokemons_elements AS pe
-        ON p.id = pe.pokemon_id
-        INNER JOIN elements AS e
-        ON pe.element_id = e.id
-        WHERE types LIKE ${search}
-        GROUP BY p.id, p.name
-        ORDER BY p.id ASC
-      `)
-        console.log(result.rows)
-        return result.rows
-    } catch (error) {
+            SELECT p.id , p.name, json_agg(e.name) AS types
+            FROM pokemons AS p
+            INNER JOIN pokemons_elements AS pe
+            ON p.id = pe.pokemon_id
+            INNER JOIN elements AS e
+            ON pe.element_id = e.id
+            WHERE e.name::text LIKE ${data1} 
+            OR e.name::text LIKE ${data2}
+            GROUP BY p.id, p.name
+            ORDER BY p.id ASC
+          `)
+            return result.rows
+
+    }
+
+    catch (error) {
         return false
     }
 }
