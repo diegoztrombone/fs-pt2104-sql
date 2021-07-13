@@ -1,20 +1,11 @@
 const { sql } = require('slonik')
 
 const getPokemons = db => async (data1 = '', data2 = '') => {
+    let whereStatement = sql``
+    if (data1 || data2) {
+        whereStatement = sql`WHERE e.name::text IN (${data1}, ${data2})`
+    }
     try {
-        if (!data1 && !data2) {
-            const result = await db.query(sql`
-            SELECT p.id , p.name, json_agg(e.name) AS types
-            FROM pokemons AS p
-            INNER JOIN pokemons_elements AS pe
-            ON p.id = pe.pokemon_id
-            INNER JOIN elements AS e
-            ON pe.element_id = e.id
-            GROUP BY p.id, p.name
-            ORDER BY p.id ASC
-          `)
-            return result.rows
-        }
         console.log("entra")
         const result = await db.query(sql`
             SELECT p.id , p.name, json_agg(e.name) AS types
@@ -23,12 +14,12 @@ const getPokemons = db => async (data1 = '', data2 = '') => {
             ON p.id = pe.pokemon_id
             INNER JOIN elements AS e
             ON pe.element_id = e.id
-            WHERE e.name::text LIKE ${data1} 
-            OR e.name::text LIKE ${data2}
+            ${whereStatement}
             GROUP BY p.id, p.name
             ORDER BY p.id ASC
           `)
-            return result.rows
+        if (result.rows.length === 0) throw new Error()
+        return result.rows
 
     }
 
@@ -81,8 +72,6 @@ const getTypes = async db => {
         const result = await db.query(sql`
         SELECT name
         FROM elements
-
-
       `)
 
         return result.rows
@@ -90,9 +79,62 @@ const getTypes = async db => {
         return false
     }
 }
+
+const getByType = db => async data => {
+    try {
+        const result = await db.query(sql`
+            SELECT p.name, json_agg(e.name) as type
+            FROM pokemons AS p
+            INNER JOIN pokemons_elements AS pe
+            ON p.id = pe.pokemon_id 
+            INNER JOIN elements AS e
+            ON pe.element_id = e.id
+            WHERE e.name::text LIKE ${data}
+            GROUP BY p.name
+    `)
+
+        if (result.rows.length === 0) throw new Error()
+        return result.rows
+
+    } catch (error) {
+        return false
+    }
+}
+const getPokemonsByName = db => async data => {
+    try {
+        const result = await db.query(sql`
+            SELECT p.id , p.name, json_agg(e.name) AS types
+            FROM pokemons AS p
+            INNER JOIN pokemons_elements AS pe
+            ON p.id = pe.pokemon_id
+            INNER JOIN elements AS e
+            ON pe.element_id = e.id
+            WHERE p.name LIKE ${data}
+            GROUP BY p.id, p.name
+            ORDER BY p.id ASC
+        `)
+        if (result.rows.length === 0) throw new Error()
+        return result.rows
+        
+    } catch (error) {
+        return false
+    }
+}
+
+const getTrainersByname = db => async data => {
+    const result = await db.query(sql`
+    
+    
+    `)
+}
+
+
 module.exports = {
     getPokemons,
     getTrainers,
     getCities,
-    getTypes
+    getTypes,
+    getByType,
+    getPokemonsByName,
+    getTrainersByname
 }
